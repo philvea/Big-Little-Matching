@@ -25,6 +25,7 @@ public class MatchingDriver {
     
     
 	public static void main(String[] args) {
+        // prompt user for matching type and whether previous littles should be included
 		MATCHING_TYPE type;
 		boolean includeLittles;
 		Scanner scanner = new Scanner(System.in);
@@ -54,9 +55,12 @@ public class MatchingDriver {
         } else {
         	includeLittles = false;
         }
+
+        // create MatchingDriver with specified configuration
 		MatchingDriver driver = new MatchingDriver(type, includeLittles);
 
         
+        // read in the file name of the little preferences file
         System.out.println("Enter the name of the little preferences file (including path):");
         File littleFile = new File(scanner.nextLine());
         while (!littleFile.exists()) {
@@ -65,6 +69,7 @@ public class MatchingDriver {
             littleFile = new File(scanner.nextLine());
         }
         
+        // read in the file name of the big preferences file
         System.out.println("Enter the name of the big preferences file (including path):");
         File bigFile = new File(scanner.nextLine());
         while (!bigFile.exists()) {
@@ -73,7 +78,11 @@ public class MatchingDriver {
             bigFile = new File(scanner.nextLine());
         } 
         scanner.close();
+
+        // read the big and little preferences from the specified files
         driver.getPreferences(littleFile, bigFile, littles, bigs); 
+
+        // perform matching
 		driver.match(littles, bigs);
 	}
 	
@@ -208,7 +217,7 @@ public class MatchingDriver {
     		}
     	}
         
-        
+        // create a matcher object
         if (matchingType == MATCHING_TYPE.GREEDY) {
         	matcher = new GreedyMatcher(littles);
         } else if (matchingType == MATCHING_TYPE.MIN_COST) {
@@ -241,8 +250,11 @@ public class MatchingDriver {
         }
         
         if (littles.size() > 0) {
+            // get pairings using either greedy alg or min cost alg, and add the pairings to the current list
         	pairings.addAll(matcher.makePairings());
         }
+
+        // randomize pairing order and then print out
         Collections.shuffle(pairings);
         printPairings(pairings);
         return pairings;
